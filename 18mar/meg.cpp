@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-
 constexpr int L = 250000 + 10;
-constexpr int treeSize = 1 << 19;
+//constexpr int treeSize = 1 << 19;
+int treeSize=1;
 
 struct Node{
 	int len=0;
@@ -12,7 +11,8 @@ struct Node{
 	int pre;
 	int post;
 } graph[L];
-int tree[2 * treeSize];
+//int tree[2 * treeSize];
+int* tree = nullptr;
 
 int n;
 int t = 0;
@@ -34,7 +34,8 @@ void add(int a, int b){
 
 	while(a/2 != b/2){
 		if(a%2==0) tree[a+1] += 1;
-		if(b%2!=0) tree[b-1] += 1;
+		if(b&2!=0) tree[b-1] += 1;
+
 		a/=2; b/=2;
 	}
 }
@@ -63,6 +64,9 @@ int main(){
 		graph[a].kids.push_back(b);
 	}
 
+	while(treeSize < 2*n) treeSize <<= 1;
+	tree = new int[treeSize*2];
+
 	DFS(1);
 	cin >> m;
 
@@ -78,6 +82,6 @@ int main(){
 			cout << graph[a].len - get(graph[a].pre) << '\n';
 		}
 	}
+	delete[] tree;
 
 }
-
