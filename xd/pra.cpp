@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
 long long fields[100000+10];
 const long double check = 1e-7;
 
