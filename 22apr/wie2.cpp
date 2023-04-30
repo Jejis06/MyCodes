@@ -2,25 +2,16 @@
 using namespace std;
 
 constexpr int L = 500'000 + 10;
-constexpr int inf = 1e9 + 10;
-
 int arr[L];
 
-
-int bs(int l, int r, const int &val){
-	int end = r;
-	while (l < r) {
-		int mid = (l+r+1)/2;
-
-		if(arr[mid] == val) return mid-1;
-		if(arr[mid] < val)
-			l = mid;
-		else if (arr[mid] > val)
-			r = mid - 1;
-
+int bs(int lo, int hi, const int &val) {
+	while (lo < hi) {
+		int mid = (lo+hi)/2;
+		if (arr[mid] >= val) hi = mid - 1;
+		else lo = mid + 1;
 	}
-	if(l == r) l--;
-	return l;
+	if (arr[lo] >= val) lo--;
+	return lo;
 }
 
 
@@ -28,23 +19,25 @@ int main(){
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 
-	int n,m,a;
+	/* liczba schodkow,  liczba mieszkancow */
+	int n,m;
 	cin >> n >> m;
 
+
+	/* ustawiamy tablice na coraz bardziej rosnace wartosci */
 	for (int i=1; i<=n; i++) {
 		cin >> arr[i];
-		arr[i] = max(arr[i], arr[i-1]);
-
+		arr[i] = max(arr[i],arr[i-1]);
 	}
 
-	int lastN=n;
-	int newN=n;
-	for (int i=0; i<m; i++) {
-		cin >> a;
+	/* zapytania, koniec przedzialu szukania */
+	int b, e=n+1;
 
-		newN= bs(1,newN,a);
-		cout << newN << ' ' <<lastN << '\t'; 	
-		
-
+	for (int j=1; j<=m; j++) {
+		cin >> b;
+		if (e) e = bs(0,e-1,b);
+		printf("%i ",e);
 	}
+
+
 }
