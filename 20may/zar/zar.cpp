@@ -2,49 +2,54 @@
 using namespace std;
 
 constexpr int L = 1e6 + 10;
-bitset<L> arr;
-int N;
+bool arr[L];
 
-void minMoves() {
-	if (arr == 0) {
-		cout << 0 << '\n';
-		return;
-	}
-	int flipCoutner = 0;
-	bool flip = false;
-
-	for (int i=N; i>=1; i--)
-		if (arr[i] ^ flip) {
-			flipCoutner++;
-			flip = flip ^ 1;
-		}
-
-	cout << flipCoutner << '\n';
-}
-
-/* zar.cpp */
 int main(){
 	ios_base::sync_with_stdio(0);
-	cin.tie(0);
+	cin.tie();
 
-	int m,flip;
-	char in;
+	int n, m, res = 0;
+	char lb;
+	bool latest = 0;
 
-	cin >> N >> m;
+	cin >> n >> m;
 
-	for (int i=0; i<N; i++){
-		cin >> in;
-		if (in == '1') arr[i+1] = 1;	
+	for (int i=1; i<=n; i++) {
+		cin >> lb;
+		if (lb == '1') {
+			arr[i] = 1;
+			if (!latest) {
+				res++;
+				latest = 1;
+			}
+		} else latest = 0;
 	}
-	
 
-	minMoves();
-	for (int i=1; i<=m; i++) {
-		cin >> flip;
-		arr[flip].flip();
-		minMoves();
+	cout << res * 2 - arr[1] << '\n';
+
+	int pos;
+	while (m--) {
+		cin >> pos;
+
+		if (pos == 1) {
+			if (!arr[2]) {
+				if (arr[1]) res--;
+				else res++;
+			}
+		}
+		else if (pos == n) {
+			if (!arr[n-1]) {
+				if (arr[n]) res--;
+				else res++;
+			}
+		}
+		else {
+			res += (arr[pos-1] && arr[pos+1]) * (arr[pos] ? 1 : -1);
+			res += (!arr[pos-1] && !arr[pos+1]) * (arr[pos] ? -1 : 1);
+		}
+
+		arr[pos] = arr[pos] ^ 1;
+		cout << res * 2 - arr[1] << '\n';
 	}
-
-
 	
 }
