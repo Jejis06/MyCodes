@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-/* code from leetcode */ class Solution { private:
+/* code from leetcode */ 
+class Solution { 
+private:
 	static const int L = 5e4 + 10;
 	vector<int> graph[L];
 	int maxPendingTime[L], parents[L];
