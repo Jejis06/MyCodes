@@ -3,3 +3,5 @@
 3. https://leetcode.com/problems/parallel-courses-iii/description/                  x
 4. https://leetcode.com/problems/find-eventual-safe-states/description/             x
 5. https://leetcode.com/problems/longest-cycle-in-a-graph/description/              x
+6. https://www.spoj.com/problems/TOPOSORT/                                          x
+7. https://cses.fi/problemset/task/1679/                                            x
