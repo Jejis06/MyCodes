@@ -2,8 +2,6 @@
 
 typedef long long int ll;
 
-#define dbg printf("in\n");
-#define nl printf("\n");
 #define pp pair<int,int>
 #define N 1001
 
@@ -55,7 +53,7 @@ int main()
     int i,j,k;
     int x,r,c;
 
-    scanf("%d%d%d",&n,&m,&k);
+    cin >> n >> m >> k;
     for(i=0;i<n;i++)
         cin>>s[i];
 
@@ -65,18 +63,19 @@ int main()
 
     while(k--)
     {
-        scanf("%d%d",&r,&c);
+	cin >> r >> c;
 
         r--;c--;
         if(vis2[r][c])
-            printf("%d\n",dist[r][c]);
+		cout << dist[r][c] << '\n';
+	
 
         else
         {
             x=dfs(r,c);
             dfs2(r,c,x);
 
-            printf("%d\n",x);
+	    cout << x << '\n';
         }
     }
 
