@@ -14,8 +14,8 @@ map<string, int[26]> inputMap;
 map<string, Char> sub;
  
 int main(){
-	// ios_base::sync_with_stdio(0);
-	// cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
  
 	string S, Added;
 	int k;
