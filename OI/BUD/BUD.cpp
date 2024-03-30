@@ -40,12 +40,12 @@ int maxResFromSlices(Stripe& wier, Stripe& col) {
 	int colA = col.y - wier.y;
 	int colB = col.len - colA - 1;
 
-	// printf("Slices(w1:%d, w2:%d | k1:%d,k2:%d)\n",wierA,wierB,colA,colB);
+	return max({
+			min(wierA+wierB+1, max(colA, colB)),
+			min(colA+colB+1, max(wierA, wierB)),
+			min(max(wierA, wierB),max(colA, colB))
+	});
 
-	return min(
-		max(wierA, wierB),
-		max(colA, colB)
-	);
 }
 
 int maxPair(Stripe& A, Stripe& B, int res){
@@ -62,8 +62,8 @@ int maxPair(Stripe& A, Stripe& B, int res){
 
 /* BUD.cpp */
 int main(){
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
+	/* ios_base::sync_with_stdio(0);
+	cin.tie(0); */
 	
 	int n,m;
 	char c;
@@ -98,35 +98,20 @@ int main(){
 		}
 	);
 
+
 	if (m == 1) {
 		cout << tableMax << '\n';
 		return 0;
 	}
-	
-/*
-	for (int i=0; i<2; i++)
-		cout << maxWier[i].len << ' ';
-	cout << '\n';
-	for (int i=0; i<2; i++)
-		cout << maxCol[i].len << ' ';
-	cout << '\n';
-	cout << '\n';
-
-	for (int i=0; i<2; i++)
-		cout << maxWier[i].x<< ',' << maxWier[i].y << ' ';
-	cout << '\n';
-	for (int i=0; i<2; i++)
-		cout << maxCol[i].x<< ',' << maxCol[i].y << ' ';
-	cout << '\n';   */
 
 	res = maxPair(maxWier[0], maxWier[1], res);
 	res = maxPair(maxCol[0], maxCol[1], res);
+
 
 	if (res == tableMax) {
 		cout << res << '\n';
 		return 0;
 	}
-
 	if (!czyPok(maxWier[0], maxCol[0])) res = maxPair(maxWier[0], maxCol[0], res);
 	else res = max(res, maxResFromSlices(maxWier[0], maxCol[0]));
 

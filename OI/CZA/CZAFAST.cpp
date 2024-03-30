@@ -9,22 +9,30 @@ struct Char {
 	bool vis=false;
 };
  
-unordered_map<ll , unordered_map<int,int>> inputMap;
+unordered_map<ll , int[26]/*unordered_map<int,int>*/> inputMap;
 unordered_map<ll , Char> sub;
   
 constexpr int length = 1e6 + 1;
-const long long mod = 1e16 + 61;
-long long BASE[length];
+constexpr ll mod = 1e9 + 7 ;
+constexpr ll inv = 129032259;
+constexpr ll p = 31;
+
+ll BASE[length];
+
+ll nextHash(ll hash, ll prev, ll next, int len){
+	ll res = (hash - prev) % mod;
+	if (res < 0) res += mod;
+
+	res = (res * inv) % mod;
+	res = (res + next * BASE[len-1]) % mod;
+	return res;
+}
+
 
 int main(){
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
-	BASE[0] = 1;
-	BASE[1] = 31;
 
-	for(int i = 2; i < length; ++i){
-		BASE[i] = (BASE[i-1] * BASE[1]) % mod;
-	}
  
 	string S, pattern = "";
 	int k;
@@ -38,13 +46,20 @@ int main(){
  
 	cin >> n >> k >> a >> b >> S; 
 
-	ll hash;
-	string substring;
+	BASE[0] = 1;
+	for (int i=1; i<n; i++) 
+		BASE[i] = (p * BASE[i-1]) % mod;
+
+	ll hash = 0;
+	string substring="";
+
+	substring.reserve(1e6+1);
+	pattern.reserve(1e6+1);
  
-	for (int i=0; i<n-k; i++) {
-		hash = 0;
-		for (int j=1; j<=k; j++) 
-			hash += BASE[j]  * (S[i + j - 1] - 96) % mod;
+	for (int i=0; i<k; i++)
+		hash = ((S[i] - 96) * BASE[i] + hash) % mod;
+
+	for (int i=1; i<n-k; i++) {
 
 		c = S[i + k] - 97;
 		bestCurrent = ++inputMap[hash][c];
@@ -54,20 +69,23 @@ int main(){
 		if ((bestSaved < bestCurrent) || (bestSaved == bestCurrent && sub[hash].code > c))
 			sub[hash].code = c;
 
+		hash = nextHash(hash, S[i-1] - 96, S[i+k] - 96, k);
+
 	}
  
 	substring = "";
-	for (int i=n-k; i<n; i++) 
+	hash = 0;
+	for (int i=n-k; i<n; i++)  {
 		substring += S[i];
+		hash = ((S[i] - 96) * BASE[i-n+k] + hash) % mod;
+
+	}
  
 	ll ind=0;
 	char charToAdd;
 	a -= (n + 1);
 	b -= (n + 1);
 	for (; ind <= b; ind++) {
-		hash = 0;
-		for (int i=1; i<=k; i++)
-			hash += BASE[i]  * (substring[i-1] - 96) % mod;
  
 		charToAdd = char(sub[hash].code + 97);
  
@@ -83,6 +101,8 @@ int main(){
 		for (int i=0; i<k-1; i++)
 			substring[i] = substring[i+1];
 		substring[k-1] = charToAdd;
+
+		hash = nextHash(hash, substring[0] - 96, S.back() - 96, k);
 	}
 
 	if (a > b) return 0;
@@ -93,11 +113,10 @@ int main(){
 	substring[k-1] = char(sub[hash].code + 97);
 
 	hash = 0;
+	for (int i=0; i<k; i++)
+		hash = (hash +  BASE[i]  * (substring[i] - 96)) % mod;
 	pattern += substring[k-1];
 	while (1) {
-		hash = 0;
-		for (int i=1; i<=k; i++)
-			hash += BASE[i]  * (substring[i-1] - 96) % mod;
 		charToAdd = char(sub[hash].code + 97);
 		if (hash == found) break;
 		pattern += charToAdd;
@@ -106,6 +125,7 @@ int main(){
 		for (int i=0; i<k-1; i++)
 			substring[i] = substring[i+1];
 		substring[k-1] = charToAdd;
+		hash = nextHash(hash, substring[0] - 96, S.back() - 96, k);
 	}
 
 	ll base = ind - pattern.size();
