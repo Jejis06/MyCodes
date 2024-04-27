@@ -22,7 +22,7 @@ int n;
 map<pair<int,int>, bool> states;
 
 int check(int b, int s) {
-	if (b + s >= n) return 0;
+	if (b + s >= n) return 0; // <- tutaj 1
 	return states[{b, s}];
 
 }
@@ -32,7 +32,6 @@ void dfs(int b, int s) {
 	dfs(2*b, s);
 	dfs(3*b, s);
 	dfs(1, b+s);
-
 
 	if (check(2*b, s) + check(3*b, s) + check(1, s+b) == 0) states[{b, s}] = 0;
 	else states[{b, s}] = 1;
