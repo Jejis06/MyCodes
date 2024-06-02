@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 #define pb push_back
-#define mp make_pair
 typedef long long ll;
 using namespace std;
 constexpr int N = 1e5 + 10;
@@ -9,7 +8,10 @@ int segSize=0;
 struct Query {
 	int l, r, idx;
 	bool operator<(const Query b) const {
-		return mp(l / segSize, r) < mp(b.l / segSize, b.r);
+		if ((l / segSize) != (b.l / segSize)) 
+			return (l / segSize) < (b.l / segSize);
+		return r < b.r;
+
 	}
 };
 
@@ -33,23 +35,22 @@ void dfs(int v, int p) {
 			dfs(child, v);
 	PS[v] = ord;
 }
-unordered_map<int, int> occ;
-
+int occ[N];
+ll sum = 0;
+// (x+1)^2 = x^2 + 2x + 1
+//  S1 = U + x^2   =>   S2 = U + (x + 1)^2 = U = x^2 + 2x + 1
 void add(int x) {
-	occ[cols[x]]++;
+	int it = cols[stree[x]];
+	sum += 2 * ll(occ[it]) + 1;
+	occ[it]++;
 }
 void remove(int x) {
-	x = cols[x];
-	occ[x]--;
-	if (occ[x] == 0) occ.erase(x);
+	int it = cols[stree[x]];
+	if (occ[it] == 0) return;
+	sum += -2 * ll(occ[it]) + 1;
+	occ[it]--;
 }
-ll get_ans() {
-	ll res = 0;
-	for (auto it : occ) {
-		res += ll(it.second) * ll(it.second);
-	}
-	return res;
-}
+
 
 /* jabl.cpp */
 int main(){
@@ -69,7 +70,8 @@ int main(){
 	}
 	dfs(1, 0);
 
-	segSize = sqrt(n) + 1;
+	segSize = static_cast<int>( sqrt(n) );
+
 	// TODO:  calculte sum of squares of numbers of distinct colors
 
 	for (int i=1; i<=n; i++) 
@@ -96,7 +98,7 @@ int main(){
 			remove(curr_l);
 			curr_l++;
 		}
-		ans[q.idx] = get_ans();
+		ans[q.idx] = sum; 
 	}
 	for (int i=1; i<=n; i++) 
 		cout << ans[i] << ' ';
