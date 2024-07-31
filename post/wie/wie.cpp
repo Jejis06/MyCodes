@@ -94,7 +94,5 @@ int main(){
 	if (res == INT_MAX) cout << -1;
 	else cout << res;
 
-
-
 }
 	
